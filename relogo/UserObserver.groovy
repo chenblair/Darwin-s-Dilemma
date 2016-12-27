@@ -43,7 +43,7 @@ class UserObserver extends ReLogoObserver{
 		ask (patches()) {
 			setPcolor(95)
 		}
-		createPlayers(2) {
+		createPlayers(numPlayers) {
 			while (count(other(playersOn(patchHere()))) > 0) {
 				setxy(randomPxcor(),randomPycor())
 			}
@@ -58,7 +58,13 @@ class UserObserver extends ReLogoObserver{
 	@Go
 	def go(){
 		ask(players()) {
-			step(maxDistance)
+			move()
+		}
+		ask(players()) {
+			kill()
+		}
+		ask(players()) {
+			reproduce(maxDistance)
 		}
 	}
 

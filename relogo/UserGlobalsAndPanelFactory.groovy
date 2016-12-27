@@ -23,5 +23,7 @@ public class UserGlobalsAndPanelFactory extends AbstractReLogoGlobalsAndPanelFac
 	        addStateChangeButtonWL("changeSomething","Change Something")
 	        
 		 */
+		addSliderWL("maxComplexity", "Maximum Complexity", 0, 1, 5, 2)
+		addSliderWL("numPlayers", "Initial Players", 1, 1, 10, 2)
 	}
 }

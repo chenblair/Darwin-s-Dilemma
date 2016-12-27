@@ -21,11 +21,12 @@ class Player extends ReLogoTurtle {
 	def historySize = 0
 	def sumDefect = 0
 	def random
+	def mutationChance = 0.5
 	
 	def initialize() {
 		random = new Random()
 		setShape("circle")
-		setColor(scaleColor(10,sumDefect,strategySize,0))
+		setColor(scaleColor(5,sumDefect,strategySize,0))
 	}
 	
 	def pickSides() {
@@ -39,29 +40,48 @@ class Player extends ReLogoTurtle {
 		}
 	}
 	
-	def step(maxDistance) {
+	def move() {
 		def closest = minOneOf(other(players())) {
 			distance(this)
 		}
 		if (closest != null)
 			play(closest)
-		label = lifespan.toString() + " "
-		label += history.toString() + " "
-		label += strategy[history].toString()
-		if (random.nextInt() % 5 == 0)
-			reproduce(maxDistance)
 	}
 	
 	def evolve() {
 		complexity++
-		strategySize *= 4
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < strategySize; j++) {
-				strategy << strategy[j]
-				if (strategy[-1])
-					sumDefect++
+				if (random.nextDouble() < mutationChance)
+				{
+					pickSides()
+				}
+				else {
+					strategy << strategy[j]
+					if (strategy[-1])
+						sumDefect++
+				}
 			}
 		}
+		softEvolve()
+		strategySize *= 4
+	}
+	
+	def softEvolve() {
+		for (int i = 0; i < strategySize; i++) {
+			if (mutationChance / 2 > random.nextDouble()) {
+				strategy[i] = !strategy[i]
+				if (strategy[i])
+					sumDefect++
+				else
+					sumDefect--
+			}
+		}
+	}
+	
+	def kill() {
+		if (lifespan <= 0)
+			die()
 	}
 	
 	def play(Player player) {
@@ -91,10 +111,6 @@ class Player extends ReLogoTurtle {
 			save(false, false)
 			player.save(false, false)
 		}
-		if (player.lifespan <= 0)
-			player.die()
-		if (lifespan <= 0)
-			die()
 	}
 	
 	def save(boolean me,boolean you) {
@@ -107,15 +123,40 @@ class Player extends ReLogoTurtle {
 	}
 	
 	def reproduce(maxDistance) {
-		def closest = minOneOf(other(patches())) {
-			count(playersHere())*maxDistance + distance(this)
+		label = lifespan.toString() + " "
+		label += sumDefect.toString() + " "
+		label += strategySize.toString() + "  "
+		label += strategy.toString()
+		if (random.nextInt() % 5 == 0) {
+			def closest = minOneOf(other(patches())) {
+				count(playersHere())*maxDistance + distance(this)
+			}
+			if (count(closest.playersHere()) == 0)
+			{
+				def thisStrategy = strategy
+				def thisStrategySize = strategySize
+				def thisSumDefect = sumDefect
+				def thisRandom = random
+				def thisComplexity = complexity
+				closest.sprout(1,{
+					strategySize = thisStrategySize
+					sumDefect = thisSumDefect
+					random = thisRandom
+					complexity = thisComplexity
+					for (int i = 0; i < strategySize; i++)
+						strategy << thisStrategy[i]
+					if (complexity < maxComplexity)
+						evolve()
+					else
+						softEvolve()
+					initialize()
+				}
+					,Player)
+			}
 		}
-		closest.sprout(1,{
-			strategy = this.strategy
-			strategySize = this.strategySize
-			sumDefect = this.sumDefect
-			initialize()
-		}
-			,Player)
+		//label += sumDefect.toString() + " "
+		//label += strategySize.toString() + "  "
+		//label += strategy.toString()
+		println label
 	}
 }
