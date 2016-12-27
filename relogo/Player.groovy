@@ -21,7 +21,6 @@ class Player extends ReLogoTurtle {
 	def historySize = 0
 	def sumDefect = 0
 	def random
-	def mutationChance = 0.5
 	
 	def initialize() {
 		random = new Random()
@@ -123,10 +122,10 @@ class Player extends ReLogoTurtle {
 	}
 	
 	def reproduce(maxDistance) {
-		label = lifespan.toString() + " "
-		label += sumDefect.toString() + " "
-		label += strategySize.toString() + "  "
-		label += strategy.toString()
+		//label = lifespan.toString() + " "
+		//label += sumDefect.toString() + " "
+		//label += strategySize.toString() + "  "
+		//label += strategy.toString()
 		if (random.nextInt() % 5 == 0) {
 			def closest = minOneOf(other(patches())) {
 				count(playersHere())*maxDistance + distance(this)
@@ -157,6 +156,6 @@ class Player extends ReLogoTurtle {
 		//label += sumDefect.toString() + " "
 		//label += strategySize.toString() + "  "
 		//label += strategy.toString()
-		println label
+		//println label
 	}
 }

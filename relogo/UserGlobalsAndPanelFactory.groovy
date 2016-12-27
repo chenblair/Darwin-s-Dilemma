@@ -25,5 +25,6 @@ public class UserGlobalsAndPanelFactory extends AbstractReLogoGlobalsAndPanelFac
 		 */
 		addSliderWL("maxComplexity", "Maximum Complexity", 0, 1, 5, 2)
 		addSliderWL("numPlayers", "Initial Players", 1, 1, 10, 2)
+		addSliderWL("mutationChance", "Mutation Chance", 0, 0.01, 1, 0.1)
 	}
 }
