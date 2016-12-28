@@ -11,7 +11,7 @@ import darwinsdilemma.ReLogoObserver;
 
 class UserObserver extends ReLogoObserver{
 	def maxDistance
-
+	def numLivePlayers
 	/**
 	 * Add observer methods here. For example:
 
@@ -66,6 +66,9 @@ class UserObserver extends ReLogoObserver{
 		ask(players()) {
 			reproduce(maxDistance)
 		}
+		numLivePlayers = count(players())
+		if (numLivePlayers == 0)
+			stop()
 	}
 
 }
