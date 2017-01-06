@@ -40,11 +40,18 @@ class Player extends ReLogoTurtle {
 	}
 	
 	def move() {
-		def closest = minOneOf(other(players())) {
-			distance(this)
+		if (longRange == 0) {
+			def closest = minOneOf(other(players())) {
+				distance(this)
+			}
+			if (closest != null)
+				play(closest)
 		}
-		if (closest != null)
-			play(closest)
+		else {
+			def other = oneOf(other(players()))
+			if (other != null)
+				play(other)
+		}
 	}
 	
 	def evolve() {
@@ -122,11 +129,7 @@ class Player extends ReLogoTurtle {
 	}
 	
 	def reproduce(maxDistance) {
-		//label = lifespan.toString() + " "
-		//label += sumDefect.toString() + " "
-		//label += strategySize.toString() + "  "
-		//label += strategy.toString()
-		if (random.nextInt() % 5 == 0) {
+		if (random.nextDouble() <= 1 / (4.6)) {
 			def closest = minOneOf(other(patches())) {
 				count(playersHere())*maxDistance + distance(this)
 			}
